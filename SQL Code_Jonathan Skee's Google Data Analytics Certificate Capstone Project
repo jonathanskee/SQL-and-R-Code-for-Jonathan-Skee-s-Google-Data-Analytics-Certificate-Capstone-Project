@@ -1,0 +1,62 @@
+#Welcome to Jonathan Skee's Google Data Analytics Certificate Capstone Project SQL code!
+#Here are the steps I took in SQL to help address the business task...
+
+#First, I wanted to inspect the data. I wanted to make sure all columns imported correctly
+SELECT * #Selects the relevant columns in the table
+FROM capstone-project-378818.cyclistic_data.cyclistic_trip_data; #Selects the table
+
+#Next, I needed to confirm that the data cleaning I conducted in Excel worked
+
+#To do this, I first confirmed that no nulls exist in the important columns
+SELECT member_casual, ride_length, day_of_week, rideable_type
+FROM capstone-project-378818.cyclistic_data.cyclistic_trip_data
+WHERE member_casual IS NULL OR ride_length IS NULL OR day_of_week IS NULL OR rideable_type is NULL; #Finds nulls in relevant columns
+
+#No nulls are found!
+
+#Next, I wanted to make sure I removed all the duplicate values from the ride_id column
+SELECT DISTINCT ride_id #Selects non-duplicate values only
+FROM capstone-project-378818.cyclistic_data.cyclistic_trip_data;
+
+#The same number of columns appears, so no duplicates are present!
+
+#Then, I wanted to run some descriptive statistics calculations to get an idea of what I'm working with
+
+#First, I found the shortest and longest ride lengths
+SELECT
+  MIN(ride_length) AS min_ride_length, #Finds the min ride
+  MAX(ride_length) AS max_ride_length #Finds the max ride
+FROM capstone-project-378818.cyclistic_data.cyclistic_trip_data;
+
+#I also wanted to look at the day of the week that travelers most often ride on
+SELECT day_of_week
+FROM   capstone-project-378818.cyclistic_data.cyclistic_trip_data
+GROUP  BY day_of_week #Organizes the results by day of week
+ORDER  BY COUNT(*) DESC; #Ranks the days of the week in order of popularity, with most popular showing first
+
+#The most popular day to ride is Monday!
+
+#I then wanted to see what the most popular bike type is (classic bike, electric bike, or docked bike)
+SELECT rideable_type
+FROM   capstone-project-378818.cyclistic_data.cyclistic_trip_data
+GROUP  BY rideable_type
+ORDER  BY COUNT(*) DESC;
+
+#The classic bike is the most popular, followed by the electric bike and docked bike
+
+#Now, I want to find the average trip duration
+SELECT AVG(ride_mins) 
+  FROM (SELECT (EXTRACT(SECOND FROM ride_length)/60 + EXTRACT(MINUTE FROM ride_length) + EXTRACT(HOUR FROM ride_length)*60) AS ride_mins #Converts the ride_length column (which was in hh:mm:ss format) into a numeric data type so I can run an AVG function
+  FROM capstone-project-378818.cyclistic_data.cyclistic_trip_data);
+
+#The average ride lasts around 13 minutes!
+
+#Lastly, I wanted to see what percent of rides were completed by annual members vs. casual riders
+SELECT member_casual, COUNT(*),
+COUNT(*)/(SELECT COUNT(*) FROM capstone-project-378818.cyclistic_data.cyclistic_trip_data) #Returns as a percentage
+FROM capstone-project-378818.cyclistic_data.cyclistic_trip_data
+GROUP BY member_casual;
+
+#Roughly 82% of rides are done by annual members, while about 18% are done by casual riders
+
+#These are the key statistics I needed to know. Further analysis will be conducted in R!
