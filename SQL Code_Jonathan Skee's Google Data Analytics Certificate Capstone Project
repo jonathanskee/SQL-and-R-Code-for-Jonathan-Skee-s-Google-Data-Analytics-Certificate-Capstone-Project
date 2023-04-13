@@ -1,5 +1,5 @@
 #Welcome to Jonathan Skee's Google Data Analytics Certificate Capstone Project SQL code!
-#Here are the steps I took in SQL to help address the business task...
+#Here are the steps I took in SQL (using Google's BigQuery) to help address the business task...
 
 #First, I wanted to inspect the data. I wanted to make sure all columns imported correctly
 SELECT * #Selects the relevant columns in the table
